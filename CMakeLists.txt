@@ -36,7 +36,7 @@ FetchContent_Declare(juce
     GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
     GIT_TAG        ${LIB_JUCE_TAG}
     GIT_SHALLOW    TRUE
-    GIT_CONFIG     advice.detachedHead=false   # Disable detached HEAD warning for a shallow clone
+    GIT_CONFIG     advice.detachedHead=false    # Disable detached HEAD warning for fetching a specific tag
     SOURCE_DIR     "${FETCHCONTENT_BASE_DIR}/JUCE"
     SUBBUILD_DIR   "${FETCHCONTENT_BASE_DIR}/JUCE-Subbuild"
     BINARY_DIR     "${FETCHCONTENT_BASE_DIR}/JUCE-Build")
