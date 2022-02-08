@@ -94,6 +94,15 @@ juce_add_plugin("${PROJECT_NAME}"
 
     COPY_PLUGIN_AFTER_BUILD TRUE)               # Should the plugin be installed to a default location after building?
 
+# Set the C++ language standard requirenment for the "shared code" library target.
+# Setting this to PUBLIC ensures that all dependent targets will inherit the specified C++ standard.
+target_compile_features("${PROJECT_NAME}" PUBLIC cxx_std_17)
+
+# Disable compiler extensions for the project targets (e.g. use -std=c++17 instead of -std=gnu++17).
+get_property(project_targets DIRECTORY "${PROJECT_SOURCE_DIR}" PROPERTY BUILDSYSTEM_TARGETS)
+
+set_target_properties(${project_targets} PROPERTIES CXX_EXTENSIONS OFF)
+
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. The include path for this header will be automatically added to the target.
 
@@ -142,13 +151,11 @@ target_link_libraries("${PROJECT_NAME}"
 
 # IDEs:  Place source groups for project targets into a "Targets" folder (to reduce visual clutter)
 # Xcode: Generate build schemes for project targets
-get_property(project_targets DIRECTORY "${PROJECT_SOURCE_DIR}" PROPERTY BUILDSYSTEM_TARGETS)
-
 set_target_properties(${project_targets} PROPERTIES
     FOLDER "Targets"
     XCODE_GENERATE_SCHEME ON)
 
-# IDEs:  Move the shared library source group (main project target) out of the "Targets" folder
+# IDEs:  Move the "shared code" source group (main target) out of the "Targets" folder
 #        to the top level.
 set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 
