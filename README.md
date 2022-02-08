@@ -1,6 +1,6 @@
 # JUCE CMake Audio Plugin Template
 
-A template for creating an audio plugin using JUCE6 and CMake.
+A template for creating an audio plugin using [JUCE 6](https://github.com/juce-framework/JUCE) and [CMake](https://cmake.org).
 
 - Generates clean Xcode projects (only the necessary build schemes, reasonable source file organisation).
 - Uses CMake to manage dependencies (e.g. JUCE). The template creates a shallow clone of the specified git tag or branch to reduce download times and disk usage.
@@ -17,5 +17,6 @@ cmake -B Build -G Xcode
 Based on the [JUCE/examples/CMake/AudioPlugin](https://github.com/juce-framework/JUCE/tree/master/examples/CMake/AudioPlugin) template.
 
 Inspired by:
+
 - [sudara/pamplejuce](https://github.com/sudara/pamplejuce)
 - [eyalamirmusic/JUCECmakeRepoPrototype](https://github.com/eyalamirmusic/JUCECmakeRepoPrototype)
