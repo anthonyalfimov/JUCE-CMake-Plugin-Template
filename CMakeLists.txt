@@ -10,9 +10,9 @@ project(PluginTemplate VERSION 0.0.1)
 set(LIB_JUCE_TAG "6.1.5")
 
 
-### IDE Generator pre-setup ###
+### IDE Generator pre-config ###
 
-# Xcode: Disable automatic build scheme generation for all targets.
+# Xcode: Disable automatic build scheme generation globally.
 #        Instead, we explicitely specify which targets require schemes.
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)
 
@@ -138,7 +138,7 @@ target_link_libraries("${PROJECT_NAME}"
         juce::juce_recommended_warning_flags)
 
 
-### IDE Generator post-setup ###
+### IDE Generator post-config ###
 
 # IDEs:  Place source groups for project targets into a "Targets" folder (to reduce visual clutter)
 # Xcode: Generate build schemes for project targets
