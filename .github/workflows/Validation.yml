@@ -1,0 +1,94 @@
+name: Validation
+
+on:
+  push:
+    branches: [main, dev]
+
+  # By default, only `opened`, `synchronize`, and `reopened` activity types will trigger the workflow
+  pull_request:
+
+  # Manual trigger:
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+  STRICTNESS_LEVEL: 10    # Strictness level for pluginval validation
+
+# Jobs run in parallel by default
+jobs:
+  build_and_validate:
+    name: Build and validate on ${{ matrix.config.name }}
+  
+    runs-on: ${{ matrix.config.os }}
+    
+    strategy:
+      # Don't cancel all in-progress jobs if any matrix job fails:
+      fail-fast: false
+      # Define a matrix of job configurations:
+      matrix:
+        config:
+        - {
+            name: 'MacOS Latest',
+            os: macos-latest,
+            gen: 'Xcode',   # CMake generator
+            # Use Xcode generator for faster builds. Enable building a universal binary:
+            cmake_config_flags: "-G Xcode -D CMAKE_OSX_ARCHITECTURES=arm64\\;x86_64",
+            # Force Xcode to use compilers from the PATH to enable buildcache. Suppress excessively verbose xcodebuild output:
+            cmake_build_flags: "-- CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -quiet",
+            pluginval_link: "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip",
+            pluginval_path: "pluginval.app/Contents/MacOS/pluginval"
+          }
+        - {
+            name: 'Windows Latest',
+            os: windows-latest,
+            gen: 'MSVC',    # CMake generator
+            pluginval_link: "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip",
+            pluginval_path: "./pluginval.exe"
+          }
+
+    # Steps run in sequence. Each step runs in its own process in the runner environment and has access to the workspace and filesystem
+    # NB! Because steps run in their own process, changes to environment variables are not preserved between steps
+    steps:
+    
+    - name: Checkout code 
+      uses: actions/checkout@v2
+
+    # Use the buildcache compiler cache to speed up builds
+    # Note: currently we are not configuring buildcache to work on Windows
+    # Details: https://github.com/mbitsnbites/buildcache/blob/master/doc/usage.md#using-with-visual-studio--msbuild
+    - name: Enable buildcache
+      if: runner.os != 'Windows'
+      uses: mikehardy/buildcache-action@v1
+      with:
+        cache_key: ${{ runner.os }}-${{ env.BUILD_TYPE }}
+
+    # Set up the dependency cache to be updated for every new commit
+    # We include the CMake generator name in the cache key. This helps avoiding cache conflicts when switching generators
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: Libs
+        key: libs-${{ runner.os }}-${{ matrix.config.gen }}-${{ github.sha }}
+        restore-keys: libs-${{ runner.os }}-${{ matrix.config.gen }}-
+
+    - name: Configure CMake
+      run: cmake -B Build ${{ matrix.config.cmake_config_flags }}
+
+    - name: Build
+      run: cmake --build Build --config ${{ env.BUILD_TYPE }} ${{ matrix.config.cmake_build_flags }}
+
+    # Note: currently pluginval fails to validate AU plugins from CLI
+    # Details: https://github.com/Tracktion/pluginval/issues/39
+    - name: Validate
+      shell: bash
+      working-directory: Build
+      env:
+        VALIDATE_IN_PROCESS: true
+      run: |
+        curl -LsS ${{ matrix.config.pluginval_link }} -o pluginval.zip
+        unzip -q pluginval
+        ${{ matrix.config.pluginval_path }} --validate *_artefacts/${{ env.BUILD_TYPE }}/VST3/*.vst3
+
+    # To enable AU validation, use the following commands to run pluginval:
+    #   shopt -s extglob  # Enable bash extended globbing
+    #   ${{ matrix.config.pluginval_path }} --validate *_artefacts/${{ env.BUILD_TYPE }}/@(VST3|AU)/*.@(vst3|component)
