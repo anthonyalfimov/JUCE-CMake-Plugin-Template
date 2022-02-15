@@ -12,9 +12,11 @@ A template for creating an audio plugin using [JUCE 6](https://github.com/juce-f
 
 To generate an Xcode project, run:
 ```sh
-cmake -B Build -G Xcode -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64
+cmake -B Build -G Xcode -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 -D CMAKE_OSX_DEPLOYMENT_TARGET=10.13
 ```
 The `-D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64` flag is required to build universal binaries.
+
+The `-D CMAKE_OSX_DEPLOYMENT_TARGET=10.13` flag sets the minimum MacOS version to be supported.
 
 ## Building
 
@@ -22,7 +24,9 @@ To build the Xcode project from the command line, run:
 ```sh
 cmake --build Build --config Debug -- -quiet
 ```
-Everything after `--` is passed to the native build tool. The `-quiet` flag suppresses excessively verbose `xcodebuild` output.
+Everything after `--` is passed to the native build tool.
+
+The `-quiet` flag suppresses excessively verbose `xcodebuild` output.
 
 ## References
 

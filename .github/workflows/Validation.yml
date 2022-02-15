@@ -31,8 +31,8 @@ jobs:
             name: 'MacOS Latest',
             os: macos-latest,
             gen: 'Xcode',   # CMake generator
-            # Use Xcode generator for faster builds. Enable building a universal binary:
-            cmake_config_flags: "-G Xcode -D CMAKE_OSX_ARCHITECTURES=arm64\\;x86_64",
+            # Use Xcode generator for faster builds. Enable building universal binaries. Set the minimum MacOS target:
+            cmake_config_flags: "-G Xcode -D CMAKE_OSX_ARCHITECTURES=arm64\\;x86_64 -D CMAKE_OSX_DEPLOYMENT_TARGET=10.13",
             # Force Xcode to use compilers from the PATH to enable buildcache. Suppress excessively verbose xcodebuild output:
             cmake_build_flags: "-- CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -quiet",
             pluginval_link: "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip",
