@@ -4,13 +4,13 @@
 
 A template for creating an audio plugin using [JUCE 6](https://github.com/juce-framework/JUCE) and [CMake](https://cmake.org).
 
-- Generates clean Xcode projects (only the necessary build schemes, reasonable source file organisation).
+- Generates clean Xcode and Visual Studio projects (reasonable source file organisation, only the necessary build schemes for Xcode).
 - Uses CMake to manage dependencies (e.g. JUCE). The template creates a shallow clone of the specified git tag or branch to reduce download times and disk usage.
 - Uses GitHub Actions to build and validate the plugin on MacOS and Windows. Dependencies and compiler output are cached for faster builds.
 
 ## Generating IDE project
 
-To generate an Xcode project, run:
+To generate an **Xcode** project, run:
 ```sh
 cmake -B Build -G Xcode -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 -D CMAKE_OSX_DEPLOYMENT_TARGET=10.13
 ```
@@ -18,15 +18,19 @@ The `-D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64` flag is required to build univers
 
 The `-D CMAKE_OSX_DEPLOYMENT_TARGET=10.13` flag sets the minimum MacOS version to be supported.
 
+---
+
+To generate a **Visual Studio 2022 (17)** project, run:
+```sh
+cmake -B Build -G "Visual Studio 17"
+```
+
 ## Building
 
-To build the Xcode project from the command line, run:
+To build the generated IDE project from the command line, run:
 ```sh
-cmake --build Build --config Debug -- -quiet
+cmake --build Build --config Debug
 ```
-Everything after `--` is passed to the native build tool.
-
-The `-quiet` flag suppresses excessively verbose `xcodebuild` output.
 
 ## References
 
