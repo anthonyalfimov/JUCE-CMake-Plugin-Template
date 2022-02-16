@@ -92,7 +92,8 @@ juce_add_plugin("${PROJECT_NAME}"
                                                 # kAudioUnitType_MusicEffect, kAudioUnitType_OfflineEffect, kAudioUnitType_Output,
                                                 # kAudioUnitType_Panner
 
-    COPY_PLUGIN_AFTER_BUILD TRUE)               # Should the plugin be installed to a default location after building?
+    COPY_PLUGIN_AFTER_BUILD FALSE)              # Should the plugin be installed to a default location after building?
+                                                # NOTE: Writing to the default install locations might require administrator privileges on Windows.
 
 # Set the C++ language standard requirenment for the "shared code" library target.
 # Setting this to PUBLIC ensures that all dependent targets will inherit the specified C++ standard.
