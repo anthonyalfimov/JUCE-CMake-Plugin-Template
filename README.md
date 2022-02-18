@@ -1,6 +1,6 @@
 # JUCE CMake Audio Plugin Template
 
-![Build](https://img.shields.io/github/workflow/status/anthonyalfimov/JUCE-CMake-Plugin-Template/Validation/main?logo=github)
+[![Build](https://img.shields.io/github/workflow/status/anthonyalfimov/JUCE-CMake-Plugin-Template/Validation/main?logo=github)](https://github.com/anthonyalfimov/JUCE-CMake-Plugin-Template/actions)
 
 A template for creating an audio plugin using [JUCE 6](https://github.com/juce-framework/JUCE) and [CMake](https://cmake.org).
 
