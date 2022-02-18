@@ -109,7 +109,7 @@ set_target_properties(${project_targets} PROPERTIES CXX_EXTENSIONS OFF)
 
 # juce_generate_juce_header("${PROJECT_NAME}")
 
-# Add the subdirectory with source files
+# Add the subdirectory with source files.
 add_subdirectory(Source)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target.
@@ -150,8 +150,8 @@ target_link_libraries("${PROJECT_NAME}"
 
 ### IDE Generator post-config ###
 
-# IDEs:  Place source groups for project targets into a "Targets" folder (to reduce visual clutter)
-# Xcode: Generate build schemes for project targets
+# IDEs:  Place source groups for project targets into a "Targets" folder (to reduce visual clutter).
+# Xcode: Generate build schemes for project targets.
 set_target_properties(${project_targets} PROPERTIES
     FOLDER "Targets"
     XCODE_GENERATE_SCHEME ON)
@@ -163,4 +163,6 @@ set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 # IDEs:  Generate source groups that follow the organisation of source file directories.
 get_target_property(project_sources "${PROJECT_NAME}" SOURCES)
 
+# NOTE:  The following source file grouping does not support JuceHeader.h generation.
+#        If JuceHeader.h is required, replace "${PROJECT_SOURCE_DIR}/Source" with "${PROJECT_SOURCE_DIR}".
 source_group(TREE "${PROJECT_SOURCE_DIR}/Source" FILES ${project_sources})
