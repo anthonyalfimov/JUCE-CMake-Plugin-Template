@@ -126,14 +126,13 @@ target_compile_definitions("${PROJECT_NAME}"
         JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
-# If your target needs extra binary assets, you can add them here. The first argument is the name of
-# a new static library target that will include all the binary resources. There is an optional
-# `NAMESPACE` argument that can specify the namespace of the generated binary data class. Finally,
-# the SOURCES argument should be followed by a list of source files that should be built into the
-# static library. These source files can be of any kind (wav data, images, fonts, icons etc.).
-# Conversion to binary-data will happen when your target is built.
+# If your target needs extra binary assets, you can add them here.
+# NOTE: Conversion to binary-data happens when the target is built.
 
-# juce_add_binary_data(Assets SOURCES ...)
+# juce_add_binary_data(Assets       # Name of a static library target that will include all the binary resources
+    # HEADER_NAME ...               # Name of the generated header. "BinaryData.h" is used by default
+    # NAMESPACE ...                 # Namespace of the generated binary data class. "BinaryData" is used by default
+#   SOURCES ...)                    # List of asset files of any kind that should be built into the static library
 
 # `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
 # we're linking our executable target to the `juce::juce_audio_utils` module. Inter-module
@@ -175,3 +174,9 @@ source_group("JUCE Library Code" FILES "${juce_header}" "${juce_header}.rule")
 
 #   Generate source groups that follow the organisation of source file directories.
 source_group(TREE "${PROJECT_SOURCE_DIR}/Source" FILES ${project_sources})
+
+#   Place Binary Data related source files into the root of their target folder
+if(TARGET Assets)
+    get_target_property(project_assets Assets SOURCES)
+    source_group("" FILES ${project_assets})
+endif()
