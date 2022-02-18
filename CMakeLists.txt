@@ -106,6 +106,7 @@ set_target_properties(${project_targets} PROPERTIES CXX_EXTENSIONS OFF)
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. The include path for this header will be automatically added to the target.
+# NOTE: JuceHeader.h is generated when the target is built.
 
 # juce_generate_juce_header("${PROJECT_NAME}")
 
@@ -160,9 +161,17 @@ set_target_properties(${project_targets} PROPERTIES
 #        to the top level.
 set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 
-# IDEs:  Generate source groups that follow the organisation of source file directories.
+# IDEs:  Organise source file grouping.
 get_target_property(project_sources "${PROJECT_NAME}" SOURCES)
 
-# NOTE:  The following source file grouping does not support JuceHeader.h generation.
-#        If JuceHeader.h is required, replace "${PROJECT_SOURCE_DIR}/Source" with "${PROJECT_SOURCE_DIR}".
+#   If JuceHeader.h is generated, remove it from the source file list and handle it individually.
+get_target_property(juce_library_code "${PROJECT_NAME}" JUCE_GENERATED_SOURCES_DIRECTORY)
+set(juce_header "${juce_library_code}/JuceHeader.h")
+
+list(REMOVE_ITEM project_sources "${juce_header}")
+
+#   Place JuceHeader.h and the associated CMake Rule file into a "JUCE Library Code" folder.
+source_group("JUCE Library Code" FILES "${juce_header}" "${juce_header}.rule")
+
+#   Generate source groups that follow the organisation of source file directories.
 source_group(TREE "${PROJECT_SOURCE_DIR}/Source" FILES ${project_sources})
