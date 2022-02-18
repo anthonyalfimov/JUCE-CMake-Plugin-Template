@@ -170,7 +170,8 @@ set(juce_header "${juce_library_code}/JuceHeader.h")
 list(REMOVE_ITEM project_sources "${juce_header}")
 
 #   Place JuceHeader.h and the associated CMake Rule file into a "JUCE Library Code" folder.
-source_group("JUCE Library Code" FILES "${juce_header}" "${juce_header}.rule")
+source_group("JUCE Library Code" FILES "${juce_header}")
+source_group("JUCE Library Code/CMake Rules" FILES "${juce_header}.rule")
 
 #   Generate source groups that follow the organisation of source file directories.
 source_group(TREE "${PROJECT_SOURCE_DIR}/Source" FILES ${project_sources})
