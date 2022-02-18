@@ -104,14 +104,14 @@ get_property(project_targets DIRECTORY "${PROJECT_SOURCE_DIR}" PROPERTY BUILDSYS
 
 set_target_properties(${project_targets} PROPERTIES CXX_EXTENSIONS OFF)
 
+# Add the subdirectory with source files.
+add_subdirectory(Source)
+
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. The include path for this header will be automatically added to the target.
 # NOTE: JuceHeader.h is generated when the target is built.
 
 # juce_generate_juce_header("${PROJECT_NAME}")
-
-# Add the subdirectory with source files.
-add_subdirectory(Source)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target.
 # JUCE modules also make use of compile definitions to switch certain features on/off,
