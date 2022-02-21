@@ -4,9 +4,12 @@
 
 A template for creating an audio plugin using [JUCE 6](https://github.com/juce-framework/JUCE) and [CMake](https://cmake.org).
 
+- Works as a drop-in replacement for Projucer - no changes to the source code are necessary! The template can also be used alongside a `.jucer` project.
 - Generates clean Xcode and Visual Studio projects (reasonable source file organisation, only the necessary build schemes for Xcode).
 - Uses CMake to manage dependencies (e.g. JUCE). The template creates a shallow clone of the specified git tag or branch to reduce download times and disk usage.
 - Uses GitHub Actions to build and validate the plugin on MacOS and Windows. Dependencies and compiler output are cached for faster builds.
+
+To learn how to replace a Projucer project with this template, see the [**Migrating from Projucer**](MIGRATE_FROM_PROJUCER.md) guide.
 
 ## Generating IDE project
 
