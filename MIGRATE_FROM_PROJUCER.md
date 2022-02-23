@@ -237,7 +237,7 @@ cmake -B Build-CMake -G "Visual Studio 17 2022"
 ```
 - `-B Build-CMake` sets the CMake build directory.
 
-- `-G Xcode` tells CMake to generate a Visual Studio 2022 project.
+- `-G "Visual Studio 17 2022"` tells CMake to generate a Visual Studio 2022 project.
 
 ---
 
