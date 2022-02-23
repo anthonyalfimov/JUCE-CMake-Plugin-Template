@@ -27,17 +27,15 @@ Copy these directory and file from the root of the template to the root of your 
 CMakeLists.txt
 ```
 
----
-
-> If you are using Finder on MacOS, you will need to reveal hidden files to copy the `.github` directory.
-Press `Cmd + Shift + .` to show hidden files, then press `Cmd + Shift + .` to hide them again once you're done.
-
----
-
 - `.github/` directory contains the GitHub Actions workflow `.github/workflows/Validation.yml`
 that builds and validates your plugin.
 
 - `CMakeLists.txt` file contains the project configuration for CMake.
+
+---
+
+> If you are using Finder on MacOS, you will need to reveal hidden files to copy the `.github` directory.
+Press `Cmd + Shift + .` to show hidden files, then press `Cmd + Shift + .` to hide them again once you're done.
 
 ---
 
@@ -162,7 +160,8 @@ All source files are created by the Projucer in the `Source` directory (without 
 
 This template requires the source file groups to be represented by subdirectories inside `Source`. Therefore, you need to recreate your Projucer source group organisation with folders:
 
-[Image: Projucer Groups -> Directories in the file system]
+![SourceDirectories](https://user-images.githubusercontent.com/43878921/155351987-3dd6aa2f-5848-49c1-8441-958bf139914a.png)
+
 
 If you want to keep using the Projucer project alongside the CMake one, you will have to modify it. All source files that you moved into subdirectories will show up in red in the Projucer. Delete these files from the Projucer, then drag-and-drop the newly created subdirectories into Projucer's "File Explorer" area. Now, some of the `#include` statements in your project will get broken. You will need to prepend the header name with the subdirectory where it is located.
 
@@ -189,9 +188,9 @@ add_subdirectory(Components)
 add_subdirectory(DSP)
 ```
 
-`target_sources()` function is used to add source files to the project target. Header files should be included in the list supplied to the function, or they will not show up in the generated IDE projects.
+- `target_sources()` function is used to add source files to the project target. Header files should be included in the list supplied to the function, or they will not show up in the generated IDE projects.
 
-`add_subdirectory()` function is used to add directories with source files. Directories added in this way should contain their own `CMakeLists.txt`. We will handle this in the next later in this step.
+- `add_subdirectory()` function is used to add directories with source files. Directories added in this way should contain their own `CMakeLists.txt`. We will handle this in the next later in this step.
 
 If you haven't  modified the `#include` statements in [step 4](#4-organise-source-files-into-directories), it is possible to avoid altering your source code altogether. To do so, you need to add the source file subdirectories to the list of include directories for your target. This is done using the `target_include_directories()` function. In our example, you would need to add the following lines to the `CMakeLists.txt` file in the `Source` directory:
 
@@ -222,13 +221,13 @@ To generate an **Xcode** project on MacOS, you can run:
 ```sh
 cmake -B Build-CMake -G Xcode -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 -D CMAKE_OSX_DEPLOYMENT_TARGET=10.13
 ```
-`-B Build-CMake` sets the CMake build directory.
+- `-B Build-CMake` sets the CMake build directory.
 
-`-G Xcode` tells CMake to generate an Xcode project.
+- `-G Xcode` tells CMake to generate an Xcode project.
 
-`-D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64` is an *optional* flag that is required to build universal binaries.
+- `-D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64` is an *optional* flag that is required to build universal binaries.
 
-`-D CMAKE_OSX_DEPLOYMENT_TARGET=10.13` is an *optional* flag that sets the minimum MacOS version to be supported.
+- `-D CMAKE_OSX_DEPLOYMENT_TARGET=10.13` is an *optional* flag that sets the minimum MacOS version to be supported.
 
 ---
 
@@ -236,17 +235,21 @@ To generate a **Visual Studio 2022 (17)** on Windows, you can run:
 ```sh
 cmake -B Build-CMake -G "Visual Studio 17 2022"
 ```
-`-B Build-CMake` sets the CMake build directory.
+- `-B Build-CMake` sets the CMake build directory.
 
-`-G Xcode` tells CMake to generate a Visual Studio 2022 project.
+- `-G Xcode` tells CMake to generate a Visual Studio 2022 project.
 
 ---
 
 When you run the appropriate command for your operating system and IDE of choice, CMake will download JUCE into the `Libs` folder and create an IDE project inside the specified build directory.
 
-Every time you add or remove source files, you need to update the appropriate `CMakeLists.txt` files.
+---
 
-Every time you make any change to any `CMakeLists.txt` file, you need to run CMake to regenerate the IDE project. To do so, you simply run `cmake -B <build directory>`. In our example with `Build-CMake` directory, you would run:
+- Every time you add or remove source files, you need to update the appropriate `CMakeLists.txt` files.
+
+- Every time you make any change to any `CMakeLists.txt` file, you need to run CMake to regenerate the IDE project.
+
+To do so, simply run `cmake -B <build directory>`. In our example with `Build-CMake` directory, you would run:
 ```sh
 cmake -B Build-CMake
 ```
