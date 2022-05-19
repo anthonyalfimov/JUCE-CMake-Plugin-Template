@@ -33,11 +33,11 @@ jobs:
         - {
             name: 'MacOS Latest',
             os: macos-latest,
-            gen: 'Xcode',   # CMake generator
-            # Use Xcode generator for faster builds. Enable building universal binaries. Set the minimum MacOS target:
-            cmake_config_flags: "-G Xcode -D CMAKE_OSX_ARCHITECTURES=arm64\\;x86_64 -D CMAKE_OSX_DEPLOYMENT_TARGET=10.13",
-            # Force Xcode to use compilers from the PATH to enable buildcache. Suppress excessively verbose xcodebuild output:
-            cmake_build_flags: "-- CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -quiet",
+            gen: 'make',   # CMake generator
+            # Use ccache. Enable building universal binaries. Set the minimum MacOS target:
+            cmake_config_flags: "-D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -D CMAKE_OSX_ARCHITECTURES=arm64\\;x86_64 -D CMAKE_OSX_DEPLOYMENT_TARGET=10.13",
+            # Enable parallel builds with make:
+            cmake_build_flags: "--parallel 6",
             pluginval_link: "https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip",
             pluginval_path: "pluginval.app/Contents/MacOS/pluginval"
           }
@@ -56,14 +56,13 @@ jobs:
     - name: Checkout code 
       uses: actions/checkout@v2
 
-    # Use the buildcache compiler cache to speed up builds
-    # Note: currently we are not configuring buildcache to work on Windows
-    # Details: https://github.com/mbitsnbites/buildcache/blob/master/doc/usage.md#using-with-visual-studio--msbuild
-    - name: Enable buildcache
+    # Use the ccache compiler cache to speed up builds
+    # Note: ccache does not support Windows
+    - name: Enable ccache
       if: runner.os != 'Windows'
-      uses: mikehardy/buildcache-action@v1
+      uses: hendrikmuhs/ccache-action@v1
       with:
-        cache_key: ${{ runner.os }}-${{ env.BUILD_TYPE }}
+        key: ${{ runner.os }}-${{ env.BUILD_TYPE }}
 
     # Set up the dependency cache to be updated for every new commit
     # We include the CMake generator name in the cache key. This helps avoiding cache conflicts when switching generators
@@ -75,7 +74,7 @@ jobs:
         restore-keys: libs-${{ runner.os }}-${{ matrix.config.gen }}-
 
     - name: Configure CMake
-      run: cmake -B Build ${{ matrix.config.cmake_config_flags }}
+      run: cmake -B Build ${{ matrix.config.cmake_config_flags }} -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
     - name: Build
       run: cmake --build Build --config ${{ env.BUILD_TYPE }} ${{ matrix.config.cmake_build_flags }}
