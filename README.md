@@ -2,7 +2,7 @@
 
 [![Build](https://img.shields.io/github/workflow/status/anthonyalfimov/JUCE-CMake-Plugin-Template/Validation/main?logo=github)](https://github.com/anthonyalfimov/JUCE-CMake-Plugin-Template/actions)
 
-A template for creating an audio plugin using [JUCE 6](https://github.com/juce-framework/JUCE) and [CMake](https://cmake.org).
+A template for creating an audio plugin using [JUCE 6/7](https://github.com/juce-framework/JUCE) and [CMake](https://cmake.org).
 
 - Works as a drop-in replacement for Projucer - no changes to the source code are necessary! The template can also be used alongside a `.jucer` project.
 - Generates clean Xcode and Visual Studio projects (reasonable source file organisation, only the necessary build schemes for Xcode).
