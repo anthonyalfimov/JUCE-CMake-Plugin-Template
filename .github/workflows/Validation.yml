@@ -79,8 +79,9 @@ jobs:
     - name: Build
       run: cmake --build Build --config ${{ env.BUILD_TYPE }} ${{ matrix.config.cmake_build_flags }}
 
-    # Note: currently pluginval fails to validate AU plugins from CLI
-    # Details: https://github.com/Tracktion/pluginval/issues/39
+    # Note: I was unable to get AU validation with pluginval 1.0.x working on a GitHub Actions runner even when copying the plugin to `/Library/Audio/Plug-ins/Components`.
+    #       Needs further investigation.
+    # Details (issue now closed): https://github.com/Tracktion/pluginval/issues/39
     - name: Validate
       shell: bash
       working-directory: Build
@@ -90,7 +91,3 @@ jobs:
         curl -LsS ${{ matrix.config.pluginval_link }} -o pluginval.zip
         unzip -q pluginval
         ${{ matrix.config.pluginval_path }} --validate *_artefacts/${{ env.BUILD_TYPE }}/VST3/*.vst3
-
-    # To enable AU validation, use the following commands to run pluginval:
-    #   shopt -s extglob  # Enable bash extended globbing
-    #   ${{ matrix.config.pluginval_path }} --validate *_artefacts/${{ env.BUILD_TYPE }}/@(VST3|AU)/*.@(vst3|component)
