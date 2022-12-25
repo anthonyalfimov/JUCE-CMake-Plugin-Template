@@ -181,3 +181,4 @@ if(TARGET Assets)
     get_target_property(project_assets Assets SOURCES)
     source_group("" FILES ${project_assets})
 endif()
+
