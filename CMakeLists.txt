@@ -7,7 +7,7 @@ project(PluginTemplate VERSION 0.0.1)
 
 ### Dependency versions ###
 
-set(LIB_JUCE_TAG "7.0.2")
+set(LIB_JUCE_TAG "7.0.3")
 
 
 ### IDE Generator pre-config ###
@@ -176,7 +176,7 @@ source_group("JUCE Library Code/CMake Rules" FILES "${juce_header}.rule")
 #   Generate source groups that follow the organisation of source file directories.
 source_group(TREE "${PROJECT_SOURCE_DIR}/Source" FILES ${project_sources})
 
-#   Place Binary Data related source files into the root of their target folder
+#   Place Binary Data related source files into the root of their target folder.
 if(TARGET Assets)
     get_target_property(project_assets Assets SOURCES)
     source_group("" FILES ${project_assets})
