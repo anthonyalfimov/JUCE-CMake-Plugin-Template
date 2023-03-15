@@ -1,4 +1,4 @@
-name: Validation
+name: Build and Validate
 
 on:
   # NOTE: Include "[no ci]", "[skip ci]", or "[ci skip]" in the commit message
@@ -15,7 +15,9 @@ on:
 
 env:
   BUILD_TYPE: Release
+  CMAKE_BUILD_PARALLEL_LEVEL: 3 # Use up to 3 CPUs to build juceaide, etc.
   STRICTNESS_LEVEL: 10    # Strictness level for pluginval validation
+  TIMEOUT_MS: 60000       # Set pluginval to time out after 1 minute
 
 # Jobs run in parallel by default
 jobs:
@@ -54,7 +56,7 @@ jobs:
     steps:
     
     - name: Checkout code 
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     # Use the ccache compiler cache to speed up builds
     # Note: ccache does not support Windows
@@ -67,7 +69,7 @@ jobs:
     # Set up the dependency cache to be updated for every new commit
     # We include the CMake generator name in the cache key. This helps avoiding cache conflicts when switching generators
     - name: Cache dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: Libs
         key: libs-${{ runner.os }}-${{ matrix.config.gen }}-${{ github.sha }}
@@ -91,3 +93,17 @@ jobs:
         curl -LsS ${{ matrix.config.pluginval_link }} -o pluginval.zip
         unzip -q pluginval
         ${{ matrix.config.pluginval_path }} --validate *_artefacts/${{ env.BUILD_TYPE }}/VST3/*.vst3
+
+    - name: Prepare build artifacts
+      shell: bash
+      working-directory: Build
+      run: |
+        shopt -s extglob  # Enable bash extended globbing
+        mkdir build-${{ runner.os }}
+        mv *_artefacts/${{ env.BUILD_TYPE }}/@(VST3|AU)/*.@(vst3|component) build-${{ runner.os }}/
+
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-${{ runner.os }}
+        path: Build/build-${{ runner.os }}
