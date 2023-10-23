@@ -1,13 +1,13 @@
 ### JUCE CMake Audio Plugin Template ###
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.22)
 
 project(PluginTemplate VERSION 0.0.1)
 
 
 ### Dependency versions ###
 
-set(LIB_JUCE_TAG "7.0.5")
+set(LIB_JUCE_TAG "7.0.8")
 
 
 ### IDE Generator pre-config ###
